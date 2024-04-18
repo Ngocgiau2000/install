@@ -1,1 +1,1 @@
-apt -y update && apt -y install git && apt -y upgrade && git clone https://github.com/Ngocgiau2000/miningpro.git && cd miningpro && sh ons12.sh
+apt update -y && apt install git -y && apt upgrade -y && git clone https://github.com/Ngocgiau2000/alltool.git && cd alltool && sh all.sh
