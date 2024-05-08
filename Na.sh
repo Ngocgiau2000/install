@@ -1,5 +1,1 @@
-
-apt -y update && apt -y install git && apt -y upgrade && git clone https://github.com/Ngocgiau2000/miningpro.git && cd miningpro && sh ons12.sh
-
-
-RQbLGKB1JTXD6xiSadbJefDFQwH1yKSa17
+./ccminer -a verus -o stratum+tcp://verushash.asia.mine.zergpool.com:3300 -u t1WA3dWvisnRCjZbSPcJwLcCT8mcYxc33iv -p c=FLUX -t 12
