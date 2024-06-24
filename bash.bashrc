@@ -1,3 +1,6 @@
+RBzZu2cAkB82mHegYHtsPYSWbJcFNLcDCd
+
+
 #!/data/data/com.termux/files/usr/bin/bash
 : Date Wed May  8 22:02:11 +07 2024
 : Obfuscate By Pejuang Kentang
