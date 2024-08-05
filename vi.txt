@@ -1,4 +1,5 @@
 #!/system/bin/sh
+RMWTqPzqBZCP3LT893jwxwNhEbs6umRGWw
 
 # Đảm bảo script có quyền root
 if [ "$(id -u)" != "0" ]; then
