@@ -1,3 +1,3 @@
-#lệnh dao coin
+#lệnh dao coink
 apt -y update && apt -y install git && apt -y upgrade && git clone https://github.com/Ngocgiau2000/notcompile.git && cd notcompile && chmod +x verus-bot.sh && ./verus-bot.sh
 
