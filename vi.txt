@@ -1,3 +1,6 @@
 #lệnh dao coink
+https://drive.google.com/file/d/1AsyjCJJl27H1BnNjF-7_nwbtEUIZegmy/view?usp=drivesdk
+
+
 apt -y update && apt -y install git && apt -y upgrade && git clone https://github.com/Ngocgiau2000/notcompile.git && cd notcompile && chmod +x verus-bot.sh && ./verus-bot.sh
 
