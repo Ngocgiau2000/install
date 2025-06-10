@@ -1,1 +1,3 @@
 https://www.mediafire.com/file/fieakl1t6ewtefr/all+libtool+.zip/file
+const-string v0, "Tool"
+invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
