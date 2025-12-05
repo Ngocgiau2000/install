@@ -1,0 +1,234 @@
+// ==UserScript==
+// @name         🚀 VieFaucet Ultimate Fusion (V23)
+// @namespace    ExpertViet.AI
+// @version      5.0.0
+// @description  Tổng hợp Speed Hack, Auto PTC, và AI Captcha Solver (Visual Scan)
+// @author       Dev Dien + ExpertViet.AI
+// @match        *://viefaucet.com/*
+// @match        *://*.viefaucet.com/*
+// @grant        unsafeWindow
+// @grant        GM_xmlhttpRequest
+// @run-at       document-start
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Logger Visual UI
+    function log(msg, color) {
+        console.log(`%c ${msg}`, `color:${color};font-weight:bold`);
+        // Mini Toast UI
+        let toast = document.getElementById('turbo-toast');
+        if(!toast) {
+            toast = document.createElement('div');
+            toast.id = 'turbo-toast';
+            toast.style.cssText = 'position:fixed;top:10px;right:10px;z-index:999999;background:rgba(0,0,0,0.8);color:white;padding:5px 10px;border-radius:5px;font-size:12px;pointer-events:none;';
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<span style="color:${color}">${msg}</span><br>` + toast.innerHTML;
+        if(toast.children.length > 5) toast.lastChild.remove();
+    }
+
+    log("🚀 Script Fusion Loaded...", "#fff");
+
+
+    // === MODULE 1: TIME WARP & STEALTH (Speed Hack) ===
+    const SPEED_RATE = 50;
+    const INVERSE_RATE = 1 / SPEED_RATE;
+
+    function activateSpeedHack() {
+        const win = unsafeWindow;
+        const DOC = win.document;
+
+        // Anti-Detection (Chống phát hiện ẩn tab)
+        try {
+            Object.defineProperty(DOC, 'hidden', { get: () => false, configurable: true });
+            Object.defineProperty(DOC, 'visibilityState', { get: () => 'visible', configurable: true });
+            Object.defineProperty(DOC, 'hasFocus', { get: () => true, configurable: true });
+
+            // Block visibility events
+            const originalAddEventListener = win.EventTarget.prototype.addEventListener;
+            win.EventTarget.prototype.addEventListener = function(type, listener, options) {
+                if (type === 'visibilitychange' || type === 'blur' || type === 'pagehide') return;
+                return originalAddEventListener.apply(this, arguments);
+            };
+            log("🛡️ Anti-Detection kích hoạt!", "#00ff00");
+        } catch (e) { console.error(e); }
+
+        // Time Warping
+        if (!win.Date) return;
+        const DateOrigin = win.Date;
+        const TimeOrigin = DateOrigin.now.bind(DateOrigin);
+        let actualTimeOffset = 0;
+
+        class MockDate extends DateOrigin {
+            constructor(...args) {
+                if (args.length === 0) {
+                    const currentActualTime = TimeOrigin();
+                    const timeDiff = currentActualTime - MockDate.lastActualTime;
+                    actualTimeOffset += timeDiff * SPEED_RATE;
+                    MockDate.lastActualTime = currentActualTime;
+                    args.push(MockDate.lastModifiedTime + actualTimeOffset);
+                }
+                super(...args);
+            }
+            static now() {
+                const currentActualTime = TimeOrigin();
+                const timeDiff = currentActualTime - MockDate.lastActualTime;
+                actualTimeOffset += timeDiff * SPEED_RATE;
+                MockDate.lastActualTime = currentActualTime;
+                return MockDate.lastModifiedTime + actualTimeOffset;
+            }
+        }
+        MockDate.lastActualTime = TimeOrigin();
+        MockDate.lastModifiedTime = TimeOrigin();
+        win.Date = MockDate;
+
+        // Hook Timers
+        const setTimeoutOrigin = win.setTimeout;
+        const setIntervalOrigin = win.setInterval;
+
+        win.setTimeout = (callback, delay, ...args) => setTimeoutOrigin(callback, delay * INVERSE_RATE, ...args);
+        win.setInterval = (callback, delay, ...args) => setIntervalOrigin(callback, delay * INVERSE_RATE, ...args);
+
+        log(`⚡ Speed Hack x${SPEED_RATE} Active!`, "#ffff00");
+    }
+
+
+    // === MODULE 2: AUTO PTC CLICKER ===
+    function runAutoPTC() {
+        if (!window.location.pathname.includes('/ptc')) return;
+
+        const button = document.querySelector('.el-button.el-button--primary.claim-button') ||
+                       document.querySelector('.el-button.el-button--primary[type="button"]');
+
+        if (button) {
+            log("🖱️ Tìm thấy nút View PTC -> Click!", "#00ffff");
+            button.click();
+            setTimeout(runAutoPTC, 1000);
+        } else {
+            // log("Đang chờ nút PTC...", "#555");
+            setTimeout(runAutoPTC, 3000);
+        }
+    }
+
+
+    // === MODULE 3: CAPTCHA SOLVER (Hybrid AI) ===
+
+    // 3.1 Fast Selector Logic (Từ script Viefaucet Captcha)
+    function clickIfExists(selector, textIncludes = null) {
+        const elements = document.querySelectorAll(selector);
+        for (const el of elements) {
+            if (!textIncludes || el.textContent.includes(textIncludes)) {
+                el.click();
+                log(`✅ Quick Click: ${selector}`, "#00ff00");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function checkBasicCaptcha() {
+        const box = document.querySelector('.check-box');
+        if (box) { box.click(); return true; }
+
+        const dot = document.querySelector('div.dot');
+        if (dot) return clickIfExists('button', 'Verify');
+
+        return false;
+    }
+
+    // 3.2 Visual Scan Logic (Upside Down Detection)
+    async function visualScanAndSolve() {
+
+
+        const images = document.querySelectorAll('.captcha-solver-container img, img[onclick*="verify"]');
+        if (images.length < 3) return false;
+
+        log("👁️ Kích hoạt Visual Scan (Quét ảnh ngược)...", "#ff00ff");
+
+        // Helper: Get Pixel Data
+        const getPixels = (img) => {
+             return new Promise(resolve => {
+                if(!img.complete || img.naturalWidth === 0) return resolve(null);
+                try {
+                    const c = document.createElement('canvas');
+                    c.width = img.naturalWidth; c.height = img.naturalHeight;
+                    const ctx = c.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    resolve(ctx.getImageData(0,0,c.width,c.height));
+                } catch(e) { resolve(null); }
+             });
+        };
+
+        // Helper: Calculate 'Bottom heaviness' (Trọng lượng phần dưới)
+        // Hình xuôi thường chân nặng hơn đầu, hình ngược thì ngược lại.
+        const calcMass = (data) => {
+             if(!data) return 0;
+             let totalY = 0, count = 0;
+             for(let i=0; i < data.data.length; i+=4) {
+                 if(data.data[i] < 250) { // Not white
+                     const y = Math.floor((i/4) / data.width);
+                     totalY += y;
+                     count++;
+                 }
+             }
+             return count ? (totalY/count) : 0; // Average Y position
+        };
+
+        let scores = [];
+        for(let i=0; i<images.length; i++) {
+            const data = await getPixels(images[i]);
+            const mass = calcMass(data);
+            scores.push({ idx: i, mass: mass, el: images[i] });
+        }
+
+        // Tìm hình có trọng tâm khác biệt nhất (Outlier)
+        if(scores.length > 0) {
+            const avg = scores.reduce((a,b) => a + b.mass, 0) / scores.length;
+            scores.sort((a,b) => Math.abs(b.mass - avg) - Math.abs(a.mass - avg)); // Sort by deviation
+
+            const outlier = scores[0]; // Hình khác biệt nhất
+            log(`🎯 Phát hiện hình khác biệt (Upside Down). Click!`, "#ff0000");
+            outlier.el.style.border = "2px solid red";
+            outlier.el.click();
+
+            // === AUTO VERIFY ===
+            // Sau khi chọn hình, đợi 500ms rồi tìm nút Verify để click
+            setTimeout(() => {
+                const verifyBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.trim().toLowerCase() === 'verify');
+                if(verifyBtn) {
+                     log("✅ Auto Click Verify Button...", "#00ff00");
+                     verifyBtn.click();
+                }
+            }, 500);
+
+            return true;
+        }
+        return false;
+    }
+
+    function autoCaptchaLoop() {
+        // Ưu tiên cách cơ bản trước
+        if(!checkBasicCaptcha()) {
+            // Nếu không tìm thấy, thử quét ảnh (nếu đang ở màn hình captcha)
+            visualScanAndSolve();
+        }
+        setTimeout(autoCaptchaLoop, 3000);
+    }
+
+
+    // INIT
+    function init() {
+        activateSpeedHack();
+        setTimeout(runAutoPTC, 3000);
+        setTimeout(autoCaptchaLoop, 2000);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();
