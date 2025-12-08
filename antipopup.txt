@@ -4,8 +4,8 @@
 // @version      5.0.0
 // @description  Tổng hợp Speed Hack, Auto PTC, và AI Captcha Solver (Visual Scan)
 // @author       Dev Dien + ExpertViet.AI
-// @match        *://viefaucet.com/*
-// @match        *://*.viefaucet.com/*
+// @match        *://*/*
+// @match        *://*/*
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
 // @run-at       document-start
